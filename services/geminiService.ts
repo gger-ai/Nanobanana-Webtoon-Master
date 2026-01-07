@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
-import { ArtStyle, WebtoonPlan } from "../types";
+import { ArtStyle, WebtoonPlan, ImageModelType } from "../types";
 import { SYSTEM_INSTRUCTION } from "../constants";
 
 const getAIClient = (apiKey: string) => {
@@ -117,35 +117,59 @@ export const rebuildPrompt = async (plan: WebtoonPlan, apiKey: string): Promise<
   return response.text?.trim() || plan.englishPrompt;
 };
 
-export const generateWebtoonPreviewImage = async (prompt: string, apiKey: string): Promise<string | null> => {
+export const generateWebtoonPreviewImage = async (prompt: string, apiKey: string, modelType: ImageModelType): Promise<string | null> => {
   const ai = getAIClient(apiKey);
   try {
-    // Restoring PRO model settings for high quality 2K generation
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-image-preview', 
-      contents: {
-        parts: [{ text: prompt }]
-      },
-      config: {
-        imageConfig: {
+    if (modelType === 'imagen') {
+       // Imagen 3.0 Model
+       const response = await ai.models.generateImages({
+        model: 'imagen-3.0-generate-001',
+        prompt: prompt,
+        config: {
+          numberOfImages: 1,
           aspectRatio: "9:16",
-          imageSize: "2K" // Explicitly requesting 2K High Quality
+          outputMimeType: "image/png"
         }
+      });
+      const imageBytes = response.generatedImages?.[0]?.image?.imageBytes;
+      if (imageBytes) {
+        return `data:image/png;base64,${imageBytes}`;
       }
-    });
+      return null;
+    } else {
+        // Gemini Models (Flash or Pro)
+        const modelName = modelType === 'nano-pro' ? 'gemini-3-pro-image-preview' : 'gemini-2.5-flash-image';
+        
+        const config: any = {
+            imageConfig: {
+              aspectRatio: "9:16",
+            }
+        };
 
-    for (const part of response.candidates?.[0]?.content?.parts || []) {
-      if (part.inlineData) {
-        return `data:image/png;base64,${part.inlineData.data}`;
-      }
+        // 2K size is only supported on Pro Image model
+        if (modelType === 'nano-pro') {
+            config.imageConfig.imageSize = "2K";
+        }
+
+        const response = await ai.models.generateContent({
+            model: modelName,
+            contents: { parts: [{ text: prompt }] },
+            config: config
+        });
+
+        for (const part of response.candidates?.[0]?.content?.parts || []) {
+            if (part.inlineData) {
+                return `data:image/png;base64,${part.inlineData.data}`;
+            }
+        }
+        return null;
     }
-    return null;
   } catch (error: any) {
     console.error("Image generation failed:", error);
     let errorMessage = "Image generation failed.";
     if (error.message) {
-        if (error.message.includes("403")) errorMessage = "Access denied. Gemini 3 Pro requires a paid/allowlisted API key.";
-        else if (error.message.includes("404")) errorMessage = "Model not found or not available in your region.";
+        if (error.message.includes("403")) errorMessage = `Access denied (${modelType}). Try switching to 'Nanobanana' or check API key permissions.`;
+        else if (error.message.includes("404")) errorMessage = "Model not found. Try switching to 'Nanobanana'.";
         else if (error.message.includes("429")) errorMessage = "Quota exceeded. Please try again later.";
         else if (error.message.includes("SAFETY")) errorMessage = "Image blocked by safety filters.";
         else errorMessage = error.message;

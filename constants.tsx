@@ -5,7 +5,12 @@ import {
   PaintBrushIcon, 
   SparklesIcon, 
   PencilIcon, 
-  CubeIcon 
+  CubeIcon,
+  BoltIcon,
+  CloudIcon,
+  Squares2X2Icon,
+  BeakerIcon,
+  BookOpenIcon
 } from '@heroicons/react/24/outline';
 
 export const STYLE_CONFIGS = {
@@ -28,6 +33,31 @@ export const STYLE_CONFIGS = {
     keywords: '3D cute character, clay render style, blender 3d, soft lighting, toy-like',
     icon: <CubeIcon className="w-6 h-6" />,
     description: '입체감이 돋보이는 귀여운 3D 클레이 스타일'
+  },
+  [ArtStyle.COMIC_BOOK]: {
+    keywords: 'american graphic novel style, bold rough pen lines, heavy black contrast, dynamic perspective, dramatic lighting, comic action effects',
+    icon: <BoltIcon className="w-6 h-6" />,
+    description: '강렬한 펜 선과 명암 대비, 역동적인 구도의 미국 그래픽 노블 스타일'
+  },
+  [ArtStyle.GHIBLI]: {
+    keywords: 'studio ghibli style, soft watercolor background, lush nature, fluffy clouds, nostalgic atmosphere, emotional, gentle character design',
+    icon: <CloudIcon className="w-6 h-6" />,
+    description: '지브리 애니메이션 특유의 따뜻하고 서정적인 힐링 감성'
+  },
+  [ArtStyle.PIXEL_ART]: {
+    keywords: 'retro pixel art, 8-bit game style, dot graphics, limited color palette, blocky shapes, nostalgic gaming vibe',
+    icon: <Squares2X2Icon className="w-6 h-6" />,
+    description: '고전 레트로 게임의 향수를 불러일으키는 픽셀 아트'
+  },
+  [ArtStyle.INK_WASH]: {
+    keywords: 'traditional ink wash painting, sumi-e style, brush texture, monochrome elegance, east asian aesthetic, atmospheric depth',
+    icon: <BeakerIcon className="w-6 h-6" />,
+    description: '먹의 농담과 번짐 효과를 살린 깊이 있고 고즈넉한 수묵화 스타일'
+  },
+  [ArtStyle.STORYBOOK]: {
+    keywords: 'childrens storybook illustration, crayon texture, oil pastel style, warm and cozy, soft shapes, cute and friendly',
+    icon: <BookOpenIcon className="w-6 h-6" />,
+    description: '크레파스와 오일 파스텔 질감의 포근하고 사랑스러운 동화책 스타일'
   }
 };
 
