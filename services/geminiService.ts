@@ -120,16 +120,16 @@ export const rebuildPrompt = async (plan: WebtoonPlan, apiKey: string): Promise<
 export const generateWebtoonPreviewImage = async (prompt: string, apiKey: string): Promise<string | null> => {
   const ai = getAIClient(apiKey);
   try {
-    // Reverting to gemini-2.5-flash-image which is broadly available and stable.
-    // Imagen 3.0/4.0 models often return 404 on standard endpoints or require specific Vertex AI setups.
+    // Restoring PRO model settings for high quality 2K generation
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-image', 
+      model: 'gemini-3-pro-image-preview', 
       contents: {
         parts: [{ text: prompt }]
       },
       config: {
         imageConfig: {
-          aspectRatio: "9:16"
+          aspectRatio: "9:16",
+          imageSize: "2K" // Explicitly requesting 2K High Quality
         }
       }
     });
@@ -144,7 +144,7 @@ export const generateWebtoonPreviewImage = async (prompt: string, apiKey: string
     console.error("Image generation failed:", error);
     let errorMessage = "Image generation failed.";
     if (error.message) {
-        if (error.message.includes("403")) errorMessage = "Access denied. Check your API key permissions.";
+        if (error.message.includes("403")) errorMessage = "Access denied. Gemini 3 Pro requires a paid/allowlisted API key.";
         else if (error.message.includes("404")) errorMessage = "Model not found or not available in your region.";
         else if (error.message.includes("429")) errorMessage = "Quota exceeded. Please try again later.";
         else if (error.message.includes("SAFETY")) errorMessage = "Image blocked by safety filters.";
