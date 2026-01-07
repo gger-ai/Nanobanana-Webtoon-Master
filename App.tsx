@@ -203,9 +203,9 @@ const App: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-2xl font-black text-gray-900 tracking-tight">나노바나나 PRO 웹툰 마스터</h1>
-                <span className="px-2 py-0.5 bg-yellow-600 text-white text-[10px] font-bold rounded-full animate-pulse">PRO (2K READY)</span>
+                <span className="px-2 py-0.5 bg-yellow-600 text-white text-[10px] font-bold rounded-full animate-pulse">PRO</span>
               </div>
-              <p className="text-yellow-900/80 font-bold text-xs tracking-wide">Google Gemini Pro 2K Intelligence</p>
+              <p className="text-yellow-900/80 font-bold text-xs tracking-wide">Google Gemini Flash Image Engine</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -605,7 +605,7 @@ const App: React.FC = () => {
               {isGeneratingImage ? (
                 <div className="flex flex-col items-center gap-4">
                   <div className="w-10 h-10 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
-                  <p className="text-xs font-bold text-yellow-500 animate-pulse">Rendering 2K...</p>
+                  <p className="text-xs font-bold text-yellow-500 animate-pulse">Generating Preview...</p>
                 </div>
               ) : generatedImage ? (
                 <>
@@ -670,7 +670,7 @@ const App: React.FC = () => {
             </div>
 
             <div className="mt-6 flex items-center gap-2 text-[9px] font-bold text-gray-600 uppercase tracking-widest">
-              <SparklesIcon className="w-3 h-3 text-yellow-600" /> Optimized for Gemini 3 Pro 2K
+              <SparklesIcon className="w-3 h-3 text-yellow-600" /> Powered by Gemini 2.5 Flash
             </div>
           </div>
         </div>
